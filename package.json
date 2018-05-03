@@ -1,0 +1,24 @@
+{
+  "name": "ankieta-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EWRR/ankieta.git"
+  },
+  "author": "EW",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EWRR/ankieta/issues"
+  },
+  "homepage": "https://github.com/EWRR/ankieta#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "request": "^2.85.0"
+  }
+}
