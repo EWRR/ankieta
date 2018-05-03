@@ -20,7 +20,18 @@ const send = (pid, message) => {
 				"id": pid
 			},
 			message:{
-				text: message
+				text: message,
+				quick_replies: [
+					{
+						content_type: 'text',
+						title: 'Wojtek',
+						payload: 1
+					}, {
+						content_type: 'text',
+						title: 'Emil',
+						payload: 2
+					}
+				]
 			}
 		};
 
