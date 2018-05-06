@@ -1,6 +1,9 @@
 'use strict';
 
 const { Sender } =  require('./app/sender');
+const { Page } = require('./app/page');
+const { Question } = require('./app/question');
+const { SingleChoiceViewer } = require('./app/singleChoiceViewer');
 
 const
 	express = require('express'),
@@ -24,19 +27,37 @@ app.post('/webhook', (req, res) => {
 
 			let webhook_event = entry.messaging[0];
 
-			console.log(webhook_event);
-
 			if (webhook_event.sender && webhook_event.message) {
-				const sender = new Sender();
 
-				sender.send(webhook_event.sender.id, webhook_event.message.text)
-					.then( (data) => {
-						if (!data.error && Number(data.response.statusCode) === 200) {
-							res.status(200).send('EVENT_RECEIVED');
-						} else {
-							res.sendStatus(404);
+				const reply = webhook_event.message.quick_reply;
+
+				const page = new Page();
+
+				page.fetch()
+					.then(pageId => {
+						if (!pageId) {
+							return;
 						}
-					}, () => {});
+
+						const question = new Question(pageId);
+						return question.fetch();
+					})
+					.then(data => {
+						const viewer = new SingleChoiceViewer(webhook_event.sender.id, data.questions, data.page, reply);
+						viewer.handleFill();
+					});
+
+				// const sender = new Sender();
+				// sender.send(webhook_event.sender.id, webhook_event.message.text)
+				// 	.then( (data) => {
+				// 		if (!data.error && Number(data.response.statusCode) === 200) {
+				// 			res.status(200).send('EVENT_RECEIVED');
+				// 		} else {
+				// 			res.sendStatus(404);
+				// 		}
+				// 	}, () => {});
+
+				res.sendStatus(200);
 			}
 
 		});
@@ -64,3 +85,4 @@ app.get('/webhook', (req, res) => {
 		}
 	}
 });
+
